@@ -1,0 +1,41 @@
+{
+  "name": "clone-packages",
+  "version": "0.0.0",
+  "description": "clone packages from one repo to another",
+  "main": "index.js",
+  "bin": {
+    "clone-packages": "./bin/clone-packages"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chrisdickinson/clone-packages.git"
+  },
+  "keywords": [
+    "clone",
+    "mirror",
+    "packages",
+    "altnpm"
+  ],
+  "author": "Chris Dickinson <chris@neversaw.us> (http://neversaw.us/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisdickinson/clone-packages/issues"
+  },
+  "homepage": "https://github.com/chrisdickinson/clone-packages",
+  "dependencies": {
+    "through": "^2.3.4",
+    "hyperquest": "^0.3.0",
+    "concat-stream": "^1.4.4",
+    "minimist": "0.0.8",
+    "duplexer": "^0.1.1",
+    "JSONStream": "^0.8.0",
+    "ansicolors": "^0.3.2"
+  },
+  "devDependencies": {
+    "tape": "^2.12.0",
+    "jsl": "^0.1.1"
+  }
+}
