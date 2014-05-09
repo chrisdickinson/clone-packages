@@ -30,7 +30,8 @@
     "hyperquest": "^0.3.0",
     "concat-stream": "^1.4.4",
     "minimist": "0.0.8",
-    "ansicolors": "^0.3.2"
+    "ansicolors": "^0.3.2",
+    "tar": "^0.1.19"
   },
   "devDependencies": {
     "tape": "^2.12.0",
