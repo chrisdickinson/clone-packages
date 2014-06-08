@@ -31,7 +31,8 @@
     "concat-stream": "^1.4.4",
     "minimist": "0.0.8",
     "ansicolors": "^0.3.2",
-    "tar": "^0.1.19"
+    "tar-stream": "^0.4.2",
+    "npm-fetch": "0.0.8"
   },
   "devDependencies": {
     "tape": "^2.12.0",
