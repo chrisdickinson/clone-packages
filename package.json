@@ -26,12 +26,14 @@
   },
   "homepage": "https://github.com/chrisdickinson/clone-packages",
   "dependencies": {
-    "through": "^2.3.4",
-    "hyperquest": "^0.3.0",
-    "concat-stream": "^1.4.4",
-    "minimist": "0.0.8",
     "ansicolors": "^0.3.2",
-    "tar": "^0.1.19"
+    "concat-stream": "^1.4.4",
+    "hyperquest": "^0.3.0",
+    "minimist": "0.0.8",
+    "npm": "^2.5.1",
+    "npm-fetch": "^0.0.9",
+    "tar-stream": "^0.4.2",
+    "through": "^2.3.4"
   },
   "devDependencies": {
     "tape": "^2.12.0",
