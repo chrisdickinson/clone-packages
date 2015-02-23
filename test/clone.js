@@ -1,20 +1,32 @@
 var backend = require('unpm-mem-backend')
-var concat = require('concat-stream')
-var tar = require('tar-stream')
-var unpm = require('unpm')
-var test = require('tape')
-var zlib = require('zlib')
+  , concat = require('concat-stream')
+  , tar = require('tar-stream')
+  , unpm = require('unpm')
+  , test = require('tape')
+  , zlib = require('zlib')
 
 var clone = require('../index.js')
 
-test('clone unpm', function testClone(t) {
-  createRegistry(8123, function gotReg(reg) {
-    var packageJSON = null
-    var version
+module.exports = function testClone() {
+  test('clone module', cloneModule)
+  test('clone version', cloneVersion)
+  test('should not blow up if cloning the same thing twice', cloneTwice)
+}
 
-    clone('unpm', 'http://registry.npmjs.org', 'http://localhost:8123', function done() {
-      reg.backend.getMeta('unpm', gotMeta)
-    })
+function cloneModule(t) {
+  createRegistry(4123, function gotReg(reg) {
+    var packageJSON = null
+      , version
+
+    clone(
+        'unpm'
+      , 'http://registry.npmjs.org'
+      , 'http://localhost:4123'
+      , function done(err) {
+          t.notOk(err)
+          reg.backend.getMeta('unpm', gotMeta)
+        }
+    )
 
     function gotMeta(err, data) {
       t.notOk(err, 'should not error')
@@ -28,20 +40,25 @@ test('clone unpm', function testClone(t) {
     function finish(json) {
       t.ok(json, 'should have found package.json')
       t.equal(json.name, 'unpm', 'should have same name in package.json')
-      t.equal(json.version, version, 'should have same version in package.json')
+      t.equal(json.version, version, 'should match version in package.json')
       reg.server.close(t.end.bind(t))
     }
   })
-})
+}
 
-test('clone unpm@1.0.0', function testClone(t) {
-  createRegistry(8123, function gotReg(reg) {
+function cloneVersion(t) {
+  createRegistry(4123, function gotReg(reg) {
     var packageJSON = null
-    var version
+      , version
 
-    clone('unpm@1.0.0', 'http://registry.npmjs.org', 'http://localhost:8123', function done() {
-      reg.backend.getMeta('unpm', gotMeta)
-    })
+    clone(
+        'unpm@1.0.0'
+      , 'http://registry.npmjs.org'
+      , 'http://localhost:4123'
+      , function done() {
+          reg.backend.getMeta('unpm', gotMeta)
+        }
+    )
 
     function gotMeta(err, data) {
       t.notOk(err, 'should not error')
@@ -53,38 +70,39 @@ test('clone unpm@1.0.0', function testClone(t) {
     function finish(json) {
       t.ok(json, 'should have found package.json')
       t.equal(json.name, 'unpm', 'should have same name in package.json')
-      t.equal(json.version, '1.0.0', 'should have same version in package.json')
+      t.equal(json.version, '1.0.0', 'should match version in package.json')
       reg.server.close(t.end.bind(t))
     }
   })
-})
+}
 
-test('should not blow up if cloning the same thing twice', function testClone(t) {
-  createRegistry(8123, function gotReg(reg) {
+function cloneTwice(t) {
+  createRegistry(4123, function gotReg(reg) {
     var packageJSON = null
-    var version
+      , remaining = 2
+      , version
 
-    var remaining = 2
-
-    clone('unpm', 'http://registry.npmjs.org', 'http://localhost:8123', cloned)
-    clone('unpm', 'http://registry.npmjs.org', 'http://localhost:8123', cloned)
+    clone('unpm', 'http://registry.npmjs.org', 'http://localhost:4123', cloned)
+    clone('unpm', 'http://registry.npmjs.org', 'http://localhost:4123', cloned)
 
     function cloned(err) {
       t.notOk(err, 'should not error')
-      if(!--remaining) reg.server.close(t.end.bind(t))
+
+      if(!--remaining) {
+        reg.server.close(t.end.bind(t))
+      }
     }
   })
-})
-
+}
 
 function createRegistry(port, done) {
   var reg = unpm({
-    backend: backend(),
-    host: {
-      hostname: 'localhost',
-      port: port,
-      protocol: 'http',
-    }
+      backend: backend()
+    , host: {
+          hostname: 'localhost'
+        , port: port
+        , protocol: 'http'
+      }
   })
 
   reg.server.listen(port, function() {
@@ -101,13 +119,16 @@ function getPackageJSON(name, version, registry, done) {
     .on('entry', onEntry)
     .on('finish', finish)
 
-    function onEntry(headers, stream, next) {
-      if(headers.name !== 'package/package.json') return next()
-      stream.pipe(concat(function concated(data) {
-        packageJSON = JSON.parse(data)
-        next()
-      }))
+  function onEntry(headers, stream, next) {
+    if(headers.name !== 'package/package.json') {
+      return next()
     }
+
+    stream.pipe(concat(function concated(data) {
+      packageJSON = JSON.parse(data)
+      next()
+    }))
+  }
 
   function finish() {
     done(packageJSON)
