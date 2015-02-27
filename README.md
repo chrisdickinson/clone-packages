@@ -14,28 +14,31 @@ or programmatically:
 ```javascript
 var clone = require('clone-packages')
 
-// grab just this package:
-clone('jsl@1.1.0', 'http://registry.npmjs.org/', 'http://my.reg/', function(err) {
+// grab this package:
+clone('jsl@1.1.0', 'http://registry.npmjs.org/', 'http://my.reg/', {}, done)
 
-})
-
-// grab this package + its deps:
-clone.all('jsl@1.1.0', 'http://registry.npmjs.org/', 'http://my.reg/', function(err) {
-
-})
+function done(err) {
+  // once cloning is complete
+}
 ```
 
 ## API
 
-#### clone(package, sourceRegistry, targetRegistry, credentials, ready)
-#### clone.all(package, sourceRegistry, targetRegistry, credentials, ready)
+#### clone(package, sourceRegistry, targetRegistry, options, ready)
 
 `package` may be an object: `{name: "packageName", version: "version"}`, or a string: `"package"`, `"package@1.1.1"`.
 
 `sourceRegistry` and `targetRegistry` must be strings representing URLs of the respective target registries.
 
-`credentials` is optional, and used in the publish step for the **target** registry only. If given, it may either
-be a string (passed on verbatim during basic auth) or a `{username, password}` object.
+`options` is an object allowing the following keys:
+
+* `username` used to authenticate in the publish step for the **target** registry.
+* `password` used with `username` to authenticate.
+* `recursive` clone all dependencies of `package`
+* `internalize` move all packages with external dependencies into the target registry.
+* `log` a function that will be called with every processed package.
+
+`ready` is a callback that will be called once cloning has completed.
 
 ## License
 
