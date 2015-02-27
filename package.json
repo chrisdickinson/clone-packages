@@ -1,6 +1,6 @@
 {
   "name": "clone-packages",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "clone packages from one repo to another",
   "main": "index.js",
   "bin": {
