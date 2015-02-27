@@ -15,7 +15,7 @@ or programmatically:
 var clone = require('clone-packages')
 
 // grab this package:
-clone('jsl@1.1.0', 'http://registry.npmjs.org/', 'http://my.reg/', {}, done)
+clone('jsl@1.1.0', 'http://registry.npmjs.org/', 'http://my.reg/', done)
 
 function done(err) {
   // once cloning is complete
